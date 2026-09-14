@@ -1,325 +1,170 @@
-# Dropout Risk Prediction System
+<div align="center">
+  <h1>🎓 EduGuard</h1>
+  <p><strong>AI-Powered Student Dropout Risk Prediction System</strong></p>
 
-A comprehensive AI/ML-powered early alert system to predict dropout risk in school students and enable timely intervention through automated alerts and stakeholder dashboards.
+  ![CI](https://github.com/a-k-thomas/Edu-Gaurd/actions/workflows/ci.yml/badge.svg)
+  ![Python](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python)
+  ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
+  ![FastAPI](https://img.shields.io/badge/FastAPI-0.104-009688?logo=fastapi)
+  ![License](https://img.shields.io/badge/License-MIT-green)
+</div>
 
-## Overview
+---
 
-This system helps identify at-risk students using machine learning based on:
-- Attendance patterns
-- Academic performance
-- Socioeconomic factors
-- Health indicators
-- Regional/cultural factors
+EduGuard is a full-stack early-alert platform that identifies students at risk of dropping out using an AI-powered heuristic scoring engine. Teachers, principals, and NGO workers get real-time dashboards, per-student risk diagnostics, and actionable intervention suggestions.
 
-## Quick Start
+## ✨ Features
+
+| Area | Details |
+|---|---|
+| **Dashboard** | Live KPI cards, risk-level donut chart, attendance/risk trend charts, high-risk radar table |
+| **Student Management** | Add/edit profiles, track attendance & grades, view full history |
+| **AI Risk Prediction** | Real-time per-student prediction + batch analysis for entire school |
+| **Student Detail** | 5 tabbed analysis (Diagnostics, Academics, Attendance, Socio-Economic, Interventions) |
+| **Reports** | Stacked bar charts by class, risk-factor breakdown, export/print |
+| **Dark Mode** | System-preference-aware with manual toggle, persisted in `localStorage` |
+
+## 🖥️ Tech Stack
+
+**Backend** · FastAPI · SQLAlchemy · SQLite (dev) / PostgreSQL (prod) · Heuristic ML Scoring Engine
+
+**Frontend** · React 18 · TypeScript · Vite · Material UI v5 · Recharts · Axios
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Docker & Docker Compose
-- OR:
-  - Python 3.9+
-  - Node.js 18+
-  - PostgreSQL 13+
-  - Redis 7+
+- Python 3.9+
+- Node.js 18+
 
-### Using Docker Compose (Recommended)
-
+### 1. Clone the repository
 ```bash
-# Start all services
-docker-compose up -d
-
-# Backend: http://localhost:8000
-# Frontend: http://localhost:3000
-# Swagger Docs: http://localhost:8000/docs
+git clone https://github.com/a-k-thomas/Edu-Gaurd.git
+cd Edu-Gaurd
 ```
 
-### Manual Setup
-
-#### Backend Setup
+### 2. Backend Setup
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
+
 pip install -r requirements.txt
 
-# Generate synthetic data
-python -m app.data.synthetic_generator
+# Seed the database with synthetic data
+python init_db.py
 
-# Start the server
-uvicorn app.main:app --reload
+# Start the API server
+uvicorn app.main:app --reload --port 8000
 ```
 
-#### Frontend Setup
+Backend runs at **http://localhost:8000** · Swagger docs at **http://localhost:8000/docs**
+
+### 3. Frontend Setup
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-## Project Structure
+Frontend runs at **http://localhost:3000**
 
-```
-Real Dropout Predicter/
-├── backend/                 # Python FastAPI backend
-│   ├── app/
-│   │   ├── models/         # SQLAlchemy models
-│   │   ├── schemas/        # Pydantic schemas
-│   │   ├── routes/         # API endpoints
-│   │   ├── services/       # Business logic
-│   │   ├── ml/             # ML models
-│   │   └── main.py         # App entry point
-│   ├── data/               # Data & synthetic data generator
-│   └── requirements.txt
-│
-├── frontend/               # React + TypeScript frontend
-│   ├── src/
-│   │   ├── components/     # Reusable components
-│   │   ├── pages/         # Page components
-│   │   ├── services/      # API calls
-│   │   ├── styles/        # Theme & styles
-│   │   └── App.tsx        # Main App component
-│   └── package.json
-│
-├── docker-compose.yml      # Docker setup
-├── PROJECT_PLAN.md        # Detailed project plan
-└── README.md (this file)
-```
-
-## API Endpoints
-
-### Students
-- `POST /api/students` - Create student
-- `GET /api/students` - List students
-- `GET /api/students/{id}` - Get student
-- `PUT /api/students/{id}` - Update student
-- `DELETE /api/students/{id}` - Delete student
-
-### Attendance
-- `POST /api/attendance/{student_id}` - Add attendance
-- `GET /api/attendance/{student_id}` - Get attendance (last 90 days)
-- `GET /api/attendance/percentage/{student_id}` - Get attendance %
-
-### Grades
-- `POST /api/grades/{student_id}` - Add grade
-- `GET /api/grades/{student_id}` - Get grades
-- `GET /api/grades/average/{student_id}` - Get average grade
-
-### Health Records
-- `POST /api/health/{student_id}` - Add health record
-- `GET /api/health/{student_id}` - Get latest health record
-
-### Predictions
-- `POST /api/predictions/predict` - Predict risk for student
-- `POST /api/predictions/batch-predict` - Predict for all students
-- `GET /api/predictions/{student_id}` - Get prediction history
-
-### Dashboard
-- `GET /api/dashboard/stats` - Dashboard statistics
-- `GET /api/dashboard/risk-distribution` - Risk distribution
-- `GET /api/dashboard/student-details/{student_id}` - Student details
-
-## Data Sources
-
-### For Development (Synthetic Data)
-```bash
-cd backend
-python data/synthetic_generator.py
-```
-
-Generates:
-- 500 students with realistic Indian school context
-- 6 months of attendance records
-- Grade data across subjects and terms
-- Health records with BMI and malnutrition indicators
-
-### For Production
-1. **ASER (Annual Status of Education Report)**
-   - URL: https://www.asercentre.org/
-   - Public survey data on Indian education
-
-2. **NFHS (National Family Health Survey)**
-   - URL: https://dhsprogram.com/
-   - Health & demographic data
-
-3. **Government Education Portals**
-   - State education department databases
-   - School management systems
-   - Government DISE portal
-
-4. **Kaggle Datasets**
-   - Student dropout prediction datasets
-   - Education performance datasets
-
-5. **Direct Integration**
-   - School management systems
-   - Biometric attendance systems
-   - Health clinic records
-
-## Machine Learning Model
-
-### Model Architecture
-**Algorithm:** XGBoost / LightGBM
-**Input Features:**
-- Attendance percentage (0-100%)
-- Average grades (0-100)
-- Menstrual health issues (binary)
-- Malnutrition indicators
-- Family income level
-- Digital device access
-- Grade drop rate
-- Family size
-- Parental education
-
-**Output:**
-- Risk Score: 0-100
-- Risk Level: Low (0-33), Medium (34-66), High (67-100)
-- Confidence: 0-1
-- Contributing Factors: List of risk indicators
-
-### Model Training
-```bash
-# After loading data
-cd backend
-python -m app.ml.trainer
-```
-
-## Features
-
-### 1. Dashboard
-- KPI cards (total students, at-risk counts)
-- Risk distribution visualization
-- Attendance & grade trends
-- Student detail views
-- Filterable by school/class/risk level
-
-### 2. Student Management
-- Add/edit student profiles
-- Record attendance
-- Track grades
-- Health records
-- View student history
-
-### 3. Risk Prediction
-- Real-time individual predictions
-- Batch predictions for school
-- Contributing factors analysis
-- Prediction history
-
-### 4. Alert System
-- SM8 notifications (via Twilio)
-- WhatsApp alerts
-- Email notifications
-- In-app notifications
-- Alert history & status tracking
-
-### 5. Reports
-- School-level summary reports
-- Student risk analysis
-- Intervention tracking
-- Exportable to PDF/Excel
-
-### 6. Multi-User Access
-- Role-based permissions
-- Admin dashboard
-- Principal reports
-- Teacher class monitoring
-- NGO/Social worker coordination
-- Parent portal
-
-## Configuration
-
-### Environment Variables
-Copy `.env.example` to `.env` and configure:
-
-```bash
-# Database
-DATABASE_URL=postgresql://user:pass@host/db
-
-# JWT
-SECRET_KEY=your-secret-key
-
-# Redis
-REDIS_URL=redis://localhost:6379/0
-
-# SMS (Twilio)
-TWILIO_ACCOUNT_SID=...
-TWILIO_AUTH_TOKEN=...
-TWILIO_PHONE_NUMBER=...
-
-# Email
-SMTP_SERVER=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=...
-SMTP_PASSWORD=...
-```
-
-## Deployment
-
-### Docker
+### 4. Using Docker Compose (alternative)
 ```bash
 docker-compose up -d
 ```
 
-### AWS/Azure
-1. RDS for PostgreSQL
-2. ElastiCache for Redis
-3. EC2/App Service for Backend
-4. CloudFront/CDN for Frontend
+## 📁 Project Structure
 
-### Scaling
-- Use load balancers for backend
-- CDN for static frontend assets
-- Database replication
-- Redis clustering
-
-## Security
-
-- ✅ HTTPS/TLS encryption
-- ✅ JWT authentication & authorization
-- ✅ Role-based access control (RBAC)
-- ✅ Data anonymization & privacy
-- ✅ Rate limiting on APIs
-- ✅ Input validation & sanitization
-- ✅ SQL injection prevention (SQLAlchemy ORM)
-
-## Testing
-
-```bash
-# Backend
-cd backend
-pytest
-
-# Frontend
-cd frontend
-npm test
+```
+Edu-Gaurd/
+├── .github/workflows/   # GitHub Actions CI (backend + frontend)
+├── backend/
+│   ├── app/
+│   │   ├── main.py      # FastAPI entry point
+│   │   ├── models/      # SQLAlchemy ORM models
+│   │   ├── schemas/     # Pydantic request/response schemas
+│   │   ├── routes/      # API endpoints
+│   │   ├── services/    # Business logic
+│   │   └── ml/          # Dropout risk scoring engine
+│   ├── init_db.py       # Database seeder (synthetic data)
+│   └── requirements.txt
+├── frontend/
+│   └── src/
+│       ├── components/  # Dashboard, Students, Reports, etc.
+│       ├── context/     # Dark-mode context
+│       ├── services/    # Axios API wrappers
+│       └── styles/      # MUI theme (light/dark)
+├── docs/                # API, ML model, deployment docs
+└── docker-compose.yml
 ```
 
-## Contributing
+## 📡 API Reference
 
-1. Create feature branch
-2. Make changes
-3. Test thoroughly
-4. Submit PR
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/health` | Health check |
+| GET | `/api/students/` | List all students |
+| POST | `/api/students/` | Create student |
+| GET | `/api/students/{id}` | Get student |
+| GET | `/api/dashboard/stats` | Dashboard KPIs |
+| GET | `/api/dashboard/risk-distribution` | Risk breakdown |
+| POST | `/api/predictions/predict` | Predict risk for one student |
+| POST | `/api/predictions/batch-predict` | Batch predict all students |
+| GET | `/api/attendance/{student_id}` | Attendance records |
+| GET | `/api/grades/{student_id}` | Grade records |
 
-## Future Enhancements
+Full docs available at `/docs` (Swagger UI) and `/redoc`.
 
-- [ ] Mobile app (React Native)
-- [ ] Advanced ML models (LSTM for time series)
-- [ ] Real-time notifications
-- [ ] Integration with school ERP systems
-- [ ] Intervention outcome tracking
-- [ ] Multi-language support
-- [ ] Offline-first mobile app
-- [ ] Video counseling integration
+## 🧠 How the Risk Score Works
 
-## Support & Contact
+The scoring engine (`backend/app/ml/__init__.py`) computes a **0–100 risk score** using weighted heuristics:
 
-For issues, questions, or suggestions, please open an issue on GitHub.
+| Factor | Weight |
+|---|---|
+| Attendance rate | High |
+| Average grade | High |
+| Grade decline trend | Medium |
+| Socioeconomic indicators (income, family size) | Medium |
+| Digital device access | Low |
+| Parental education level | Low |
 
-## License
+**Risk Levels:** 🟢 Low (0–33) · 🟡 Medium (34–66) · 🔴 High (67–100)
 
-MIT License - See LICENSE file
+## ⚙️ Configuration
+
+Copy `backend/.env.example` to `backend/.env`:
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Key variables:
+
+```env
+DATABASE_URL=sqlite:///./dropout_db.db   # Default: SQLite (no extra setup)
+SECRET_KEY=your-secret-key
+DEBUG=True
+```
+
+See `.env.example` for optional PostgreSQL, Redis, Twilio, and SMTP settings.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Commit your changes (`git commit -m 'feat: add my feature'`)
+4. Push and open a Pull Request
+
+## 📄 License
+
+MIT — see [LICENSE](LICENSE)
 
 ---
 
-**Last Updated:** March 5, 2026
-**Version:** 1.0.0 (MVP)
+<div align="center">
+  Built with ❤️ to keep every student in school.
+</div>
